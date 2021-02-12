@@ -1,6 +1,6 @@
 # SuperBMD Collada exporter for Blender
 
-An addon for [Blender](https://www.blender.org) that intends to make it effortless
+An addon for [Blender](https://www.blender.org) 2.80+ that intends to make it effortless
 to export models and animations to a format compatible with [SuperBMD](https://github.com/Sage-of-Mirrors/SuperBMD),
 a tool for creating assets for use with various GameCube-era Nintendo games.
 
