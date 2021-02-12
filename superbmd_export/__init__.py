@@ -29,7 +29,7 @@ bl_info = {
     "description": ("Export DAE Scenes for use with SuperBMD. "
                     "Based on Better Collada Exporter created for the Godot Engine community."),
     "warning": "",
-    "wiki_url": ("https://godotengine.org"),
+    "wiki_url": ("https://wiki.cloudmodding.com/tww/Main_Page"),
     "tracker_url": "https://github.com/Sage-of-Mirrors/collada-exporter-2.8",
     "support": "OFFICIAL",
     "category": "Import-Export"}
