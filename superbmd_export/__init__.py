@@ -20,17 +20,17 @@ from bpy.props import StringProperty, BoolProperty, FloatProperty, EnumProperty
 
 from bpy_extras.io_utils import ExportHelper
 bl_info = {
-    "name": "Better Collada Exporter",
-    "author": "Juan Linietsky, artell",
-    "version": (1, 10, 11),
+    "name": "SuperBMD Collada Exporter",
+    "author": "Juan Linietsky, artell (Better Collada Exporter), Gamma (SuperBMD support)",
+    "version": (1, 0, 0),
     "blender": (2, 80, 0),
     "api": 38691,
     "location": "File > Import-Export",
-    "description": ("Export DAE Scenes. This plugin actually works better! "
-                    "Otherwise contact the Godot Engine community."),
+    "description": ("Export DAE Scenes for use with SuperBMD. "
+                    "Based on Better Collada Exporter created for the Godot Engine community."),
     "warning": "",
     "wiki_url": ("https://godotengine.org"),
-    "tracker_url": "https://github.com/godotengine/collada-exporter",
+    "tracker_url": "https://github.com/Sage-of-Mirrors/collada-exporter-2.8",
     "support": "OFFICIAL",
     "category": "Import-Export"}
 
@@ -174,7 +174,7 @@ class CE_OT_export_dae(bpy.types.Operator, ExportHelper):
 
 
 def menu_func(self, context):
-    self.layout.operator(CE_OT_export_dae.bl_idname, text="Better Collada (.dae)")
+    self.layout.operator(CE_OT_export_dae.bl_idname, text="SuperBMD Collada (.dae)")
 
 	
 #classes = (CE_OT_export_dae)

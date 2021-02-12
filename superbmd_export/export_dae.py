@@ -32,6 +32,7 @@ import bpy
 import bmesh
 from mathutils import Vector, Matrix
 from bpy_extras import node_shader_utils
+from bpy_extras.io_utils import axis_conversion
 
 # According to collada spec, order matters
 S_ASSET = 0
@@ -702,6 +703,7 @@ class DaeExporter:
 
                 v = self.Vertex()
                 v.vertex = Vector(mv.co)
+                v.vertex.rotate(self.axis_conversion.to_quaternion())
 
                 for xt in mesh.uv_layers:
                     v.uv.append(Vector(xt.data[loop_index].uv))
@@ -711,10 +713,13 @@ class DaeExporter:
                         mesh.vertex_colors[0].data[loop_index].color)
 
                 v.normal = Vector(ml.normal)
+                v.normal.rotate(self.axis_conversion.to_quaternion())
 
                 if (has_tangents):
                     v.tangent = Vector(ml.tangent)
+                    v.tangent.rotate(self.axis_conversion.to_quaternion())
                     v.bitangent = Vector(ml.bitangent)
+                    v.bitangent.rotate(self.axis_conversion.to_quaternion())
 
                 if armature is not None:
                     wsum = 0.0
@@ -1020,7 +1025,7 @@ class DaeExporter:
                 contid))
             pose_values = ""
             for v in si["bone_bind_poses"]:
-                pose_values += " {}".format(strmtx(v))
+                pose_values += " {}".format(strmtx((self.axis_conversion @ v) @ self.invert_axis_conversion))
 
             self.writel(
                 S_SKIN, 4, "<float_array id=\"{}-bind_poses-array\" "
@@ -1223,7 +1228,7 @@ class DaeExporter:
         if (is_ctrl_bone is False):
             self.writel(
                 S_NODES, il, "<matrix sid=\"transform\">{}</matrix>".format(
-                    strmtx(xform)))
+                    strmtx((self.axis_conversion @ xform) @ self.invert_axis_conversion)))
 
         for c in bone.children:
             self.export_armature_bone(c, il, si)
@@ -1652,7 +1657,7 @@ class DaeExporter:
         for k in keys:
             source_frames += " {}".format(k[0])
             if (matrices):
-                source_transforms += " {}".format(strmtx(k[1]))
+                source_transforms += " {}".format(strmtx((self.axis_conversion @ k[1]) @ self.invert_axis_conversion))
             else:
                 source_transforms += " {}".format(k[1])
 
@@ -2031,7 +2036,7 @@ class DaeExporter:
                  "path", "mesh_cache", "curve_cache", "material_cache",
                  "image_cache", "skeleton_info", "config", "valid_nodes",
                  "armature_for_morph", "used_bones", "wrongvtx_report",
-                 "skeletons", "action_constraints", "temp_meshes")
+                 "skeletons", "action_constraints", "temp_meshes", "axis_conversion", "invert_axis_conversion")
 
     def __init__(self, path, kwargs, operator):
         self.operator = operator
@@ -2053,6 +2058,9 @@ class DaeExporter:
         self.wrongvtx_report = False
         self.skeletons = []
         self.action_constraints = []
+        self.axis_conversion = axis_conversion(from_forward='Y', from_up='Z', to_forward='-Z', to_up='Y').to_4x4()
+        #self.axis_conversion.transpose()
+        self.invert_axis_conversion = self.axis_conversion.inverted()
 
     def __enter__(self):
         return self
